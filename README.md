@@ -64,6 +64,7 @@
 | ------------ | ----------------------- |
 | + (long leg) | D13                     |
 | -            | GND (via resistor 220Ω) |
+---
 🔹 Motor Driver (L298N)
 Function
 Arduino Pin
@@ -74,4 +75,3 @@ IN4 D5
 ENA D10 (PWM) 
 ENB D11 (PWM)
 ---
-
