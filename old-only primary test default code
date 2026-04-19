@@ -1,0 +1,130 @@
+| Device     | Pin    | Arduino Pin |
+| ---------- | ------ | ----------- |
+| Servo      | Signal | D9          |
+| Servo      | VCC    | 5V          |
+| Servo      | GND    | GND         |
+| Ultrasonic | TRIG   | D7          |
+| Ultrasonic | ECHO   | D6          |
+| Ultrasonic | VCC    | 5V          |
+| Ultrasonic | GND    | GND         |
+| Buzzer     | +      | D8          |
+| Buzzer     | -      | GND         |
+
+| L298N Function | Arduino Pin | Remark                           |
+| -------------- | ----------- | -------------------------------- |
+| IN1            | D2          | Left motor forward/back control  |
+| IN2            | D3          | Left motor forward/back control  |
+| IN3            | D4          | Right motor forward/back control |
+| IN4            | D5          | Right motor forward/back control |
+| ENA            | D12 (PWM)   | Left motor speed control         |
+| ENB            | D13 (PWM)   | Right motor speed control        |
+
+
+| Sensor | Arduino Pin |
+| ------ | ----------- |
+| Left   | A4          |
+| Right  | A5          |
+
+
+//ONLY FOR WHILE
+#define IN1 2
+#define IN2 3
+#define IN3 4
+#define IN4 5
+#define ENA 12
+#define ENB 13
+
+void setup() {
+  pinMode(IN1, OUTPUT);
+  pinMode(IN2, OUTPUT);
+  pinMode(IN3, OUTPUT);
+  pinMode(IN4, OUTPUT);
+  pinMode(ENA, OUTPUT);
+  pinMode(ENB, OUTPUT);
+
+  // Full speed
+  analogWrite(ENA, 200);
+  analogWrite(ENB, 200);
+}
+
+void loop() {
+  // BOTH motors forward
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, LOW);
+
+  digitalWrite(IN3, HIGH);
+  digitalWrite(IN4, LOW);
+}
+
+
+
+
+// FOR ARDINO ,BAZER, SERVO,  Ultrasonic
+#include <Servo.h>
+
+Servo myServo;
+
+#define trigPin 7
+#define echoPin 6
+#define buzzer 8
+
+long duration;
+int distance;
+
+void setup() {
+  myServo.attach(9);     
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  pinMode(buzzer, OUTPUT);
+  Serial.begin(9600);
+}
+
+// Function: read distance with noise filter
+int getDistance() {
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  duration = pulseIn(echoPin, HIGH, 30000); // 30ms timeout
+  if(duration == 0) return 999;             // invalid reading
+
+  return duration * 0.034 / 2;
+}
+
+// Function: check distance and control buzzer
+void distanceCheck() {
+  int total = 0;
+  int count = 5; // average of 5 readings
+  for(int i = 0; i < count; i++) {
+    total += getDistance();
+    delay(5);
+  }
+  distance = total / count;
+
+  Serial.println(distance);
+
+  if(distance > 0 && distance < 20) { // object detected
+    digitalWrite(buzzer, HIGH);
+  } else {
+    digitalWrite(buzzer, LOW);
+  }
+}
+
+void loop() {
+  // Servo sweep from 0° → 90°
+  for(int pos = 0; pos <= 90; pos += 1) {
+    myServo.write(pos);
+    delay(15); // smaller delay → smoother
+    distanceCheck(); 
+  }
+
+  // Servo sweep back 90° → 0°
+  for(int pos = 90; pos >= 0; pos -= 1) {
+    myServo.write(pos);
+    delay(15);
+    distanceCheck();
+  }
+}
