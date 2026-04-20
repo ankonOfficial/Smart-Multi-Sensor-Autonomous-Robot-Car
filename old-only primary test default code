@@ -1,30 +1,5 @@
-| Device     | Pin    | Arduino Pin |
-| ---------- | ------ | ----------- |
-| Servo      | Signal | D9          |
-| Servo      | VCC    | 5V          |
-| Servo      | GND    | GND         |
-| Ultrasonic | TRIG   | D7          |
-| Ultrasonic | ECHO   | D6          |
-| Ultrasonic | VCC    | 5V          |
-| Ultrasonic | GND    | GND         |
-| Buzzer     | +      | D8          |
-| Buzzer     | -      | GND         |
 
-| L298N Function | Arduino Pin | Remark                           |
-| -------------- | ----------- | -------------------------------- |
-| IN1            | D2          | Left motor forward/back control  |
-| IN2            | D3          | Left motor forward/back control  |
-| IN3            | D4          | Right motor forward/back control |
-| IN4            | D5          | Right motor forward/back control |
-| ENA            | D12 (PWM)   | Left motor speed control         |
-| ENB            | D13 (PWM)   | Right motor speed control        |
-
-
-| Sensor | Arduino Pin |
-| ------ | ----------- |
-| Left   | A4          |
-| Right  | A5          |
-
+1)
 // Motor Pins
 #define IN1 2
 #define IN2 3
@@ -92,7 +67,7 @@ void loop() {
 
 
 
-
+2)
 
 #include <Servo.h>
 
